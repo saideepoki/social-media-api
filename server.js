@@ -2,9 +2,13 @@ const express = require('express');
 const sqlite3 = require('sqlite3');
 
 
+const app = express();
+
 // ### Middlewares
 // parsing body
 app.use(express.json());
+
+
 
 
 //
@@ -26,7 +30,7 @@ db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
+        email TEXT UNIQUE NOT NULL
         ) 
     `);
     
@@ -36,20 +40,46 @@ db.serialize(() => {
         title TEXT NOT NULL,
         content TEXT NOT NULL,
         user_id INTEGER,
-        FOREIGN KEY (user_id) REFERENCES users(id);
+        FOREIGN KEY (user_id) REFERENCES users(id)
         )`);
 
 });
 
 
 
-const app = express();
+
 
 
 // Home route
 app.get('/',(req, res)=>{
     res.send("Welcome to the social media app server");
 })
+
+
+// CRUD operations for users
+
+// Create a User
+app.post('/users',(req, res) => {
+    const {name, email}  = req.body;
+    const query = `INSERT INTO users(name, email) VALUES(?,?)`;
+    db.run(query, [name, email], (err) => {
+        if(err) {
+            return res.status(400).json(
+                {
+                    error: "Failed to create the user",
+                    message: err.message
+                }
+            )
+        }
+        res.status(201).json({
+            message: "User created successfully",
+            user: {
+                name,
+                email
+            }
+        })
+    })
+});
 
 // Listening the api on port 3000
 app.listen(3000, () =>  {
