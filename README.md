@@ -50,7 +50,7 @@ The database schema consists of two tables: **Users** and **Posts**.
 | **Method** | **Endpoint**  | **Description**          | **Example Request Body**                                         |
 |-------------|---------------|-------------------------|------------------------------------------------------------------|
 | `POST`     | `/posts`       | Create a new post        | `{ "title": "rtetert", "content": "rtetre", "userId": 1 }` |
-| `GET`      | `/posts`       | Get all posts with author info | -                                                          |
+| `GET`      | `/posts`       | Get all posts with user info | -                                                          |
 | `PUT`      | `/posts/:id`   | Update a post by ID      | `{ "title": "Uty", "content": "Uenure", "userId": 1 }` |
 | `DELETE`   | `/posts/:id`   | Delete a post by ID      | -                                                                |
 
