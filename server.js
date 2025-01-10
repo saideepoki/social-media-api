@@ -175,6 +175,26 @@ app.get('/posts',(req, res) => {
     })
 });
 
+// Update a Post by providing the id
+app.post("/posts/:id", (req, res) => {
+    const { id } = req.params;
+    const {title, content, user_id} = req.body;
+    const query = `UPDATE posts set title = ?, content = ?, user_id = ? WHERE id = ?`;
+    db.run(query, [title, content, user_id, id], (err) => {
+        if(err) {
+            return res.status(400).json(
+                {
+                    error: "Failed to update the post",
+                    message: err.message
+                }
+            )
+        }
+        res.json({
+            message: "Post updated successfully"
+        })
+    })
+})
+
 
 // Listening the api on port 3000
 app.listen(3000, () =>  {
