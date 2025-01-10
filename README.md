@@ -64,7 +64,7 @@ The database schema consists of two tables: **Users** and **Posts**.
 
 ### **Application Information**
 - The application will run on **port 3000**.
-- When you run the app for the rirst time, a file named socialMedia.db will be created, that's where the data will persist
+- When you run the app for the first time, a file named socialMedia.db will be created, that's where the data will persist
 
 
 
