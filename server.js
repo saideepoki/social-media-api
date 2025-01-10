@@ -94,6 +94,26 @@ app.get('/users',(req,res) => {
     })
 })
 
+// Update a User
+app.put("/users/:id",(req,res) => {
+    const { id } = req.params;
+    const {name, email} = req.body;
+    const query = `UPDATE users set name = ?, email = ? WHERE id = ?`;
+    db.run(query, [name, email, id], (err) => {
+        if(err) {
+            return res.status(400).json(
+                {
+                    error: "Failed to update the user",
+                    message: err.message
+                }
+            )
+        }
+        res.json({
+            message:"User updates successfully",
+        })
+    })
+})
+
 // Listening the api on port 3000
 app.listen(3000, () =>  {
     console.log("Server is running on port 3000");
