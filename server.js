@@ -52,7 +52,7 @@ app.get('/',(req, res)=>{
 })
 
 
-// CRUD operations for users
+// #####  CRUD operations for users #####
 
 // Create a User
 app.post('/users',(req, res) => {
@@ -94,7 +94,7 @@ app.get('/users',(req,res) => {
     })
 })
 
-// Update a User
+// Update a User by providing the id
 app.put("/users/:id",(req,res) => {
     const { id } = req.params;
     const {name, email} = req.body;
@@ -110,6 +110,51 @@ app.put("/users/:id",(req,res) => {
         }
         res.json({
             message:"User updates successfully",
+        })
+    })
+});
+
+// Delete a User by providing the id
+app.delete("/users/:id", (req, res) => {
+    const { id } = req.params;
+    const query = `DELETE FROM users WHERE id = ?`;
+    db.run(query, [id], (err) => {
+        if(err) {
+            return res.status(400).json(
+                {
+                    error: "Failed to delete the user",
+                    message: err.message
+                }
+            )
+        }
+        res.json({
+            message: "User deleted successfully"
+        })
+    })
+})
+
+// #####  CRUD operations for users #####
+
+// Create a Post and link it to a user
+app.post('/posts',(req, res) => {
+    const {title, content, user_id} = req.body;
+    const query = `INSERT INTO posts(title, content, user_id) VALUES(?,?,?)`;
+    db.run(query, [title, content, user_id], (err) => {
+        if(err) {
+            return res.status(400).json(
+                {
+                    error: "Failed to create the post",
+                    message: err.message
+                }
+            )
+        }
+        res.json({
+            message: "Post created successfully",
+            post: {
+                title,
+                content,
+                user_id
+            }
         })
     })
 })
