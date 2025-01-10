@@ -159,6 +159,23 @@ app.post('/posts',(req, res) => {
     })
 })
 
+// Read all posts
+app.get('/posts',(req, res) => {
+    const query = `SELECT * FROM posts`;
+    db.all(query, (err, posts) => {
+        if(err) {
+            return res.status(400).json(
+                {
+                    error: "Failed to read posts",
+                    message: err.message
+                }
+            )
+        }
+        res.json(posts);
+    })
+});
+
+
 // Listening the api on port 3000
 app.listen(3000, () =>  {
     console.log("Server is running on port 3000");
