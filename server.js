@@ -23,7 +23,7 @@ const db = new sqlite3.Database('socialMedia.db', (err) => {
 
 
 
-
+// Creating the tables in the database sequentially
 db.serialize(() => {
 
     // Creating user table
@@ -192,6 +192,45 @@ app.post("/posts/:id", (req, res) => {
         res.json({
             message: "Post updated successfully"
         })
+    })
+})
+
+
+// Delete a post by providing the id
+app.delete("/posts/:id", (req, res) => {
+    const { id } = req.params;
+    const query = `DELETE FROM posts WHERE id = ?`;
+    db.run(query, [id], (err) => {
+        if(err) {
+            return res.status(400).json(
+                {
+                    error: "Failed to delete the post",
+                    message: err.message
+                }
+            )
+        }
+        res.json({
+            message: "Post deleted successfully"
+        })
+    })
+})
+
+// Get all users info along with their posts
+app.get("/users/posts", (req, res) => {
+    const query = `
+        SELECT users.id AS userId , users.name, users.email, posts.id as postId, posts.title, posts.content, posts.user_id
+        FROM users JOIN posts ON users.id = posts.user_id
+    `
+    db.all(query, (err, users) => {
+        if(err) {
+            return res.status(400).json(
+                {
+                    error: "Failed to get users and posts",
+                    message: err.message
+                }
+            )
+        }
+        res.json(users);
     })
 })
 
