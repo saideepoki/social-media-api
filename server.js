@@ -11,7 +11,7 @@ app.use(express.json());
 
 
 
-//
+// Initializing the database using the given filename
 const db = new sqlite3.Database('socialMedia.db', (err) => {
     if(err) {
         console.log("Error in connecting to the database", err);
@@ -46,10 +46,6 @@ db.serialize(() => {
 });
 
 
-
-
-
-
 // Home route
 app.get('/',(req, res)=>{
     res.send("Welcome to the social media app server");
@@ -80,6 +76,23 @@ app.post('/users',(req, res) => {
         })
     })
 });
+
+
+// Get all users
+app.get('/users',(req,res) => {
+    const query = `SELECT * FROM users`;
+    db.all(query,(err, users) => {
+        if(err) {
+            return res.status(400).json(
+                {
+                    error: "failed to get users",
+                    message: err.message
+                }
+            )
+        }
+        res.json(users);
+    })
+})
 
 // Listening the api on port 3000
 app.listen(3000, () =>  {
